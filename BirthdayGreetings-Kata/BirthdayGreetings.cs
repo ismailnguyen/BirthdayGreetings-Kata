@@ -1,22 +1,24 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace BirthdayGreetings_Kata
 {
     public class BirthdayGreetings
     {
-        private IEmployeeRepository employeeRepository;
-        private IGreetingsSender greetingsSender;
+        private readonly IEmployeeRepository employeeRepository;
+        private readonly IGreetingsSender greetingsSender;
+        private readonly IDateTimeService dateTimeService;
 
-        public BirthdayGreetings(IEmployeeRepository employeeRepository, IGreetingsSender greetingsSender)
+        public BirthdayGreetings(IEmployeeRepository employeeRepository, IGreetingsSender greetingsSender, IDateTimeService dateTimeService)
         {
             this.employeeRepository = employeeRepository;
             this.greetingsSender = greetingsSender;
+            this.dateTimeService = dateTimeService;
         }
 
         public void Greet()
         {
-            var employees = employeeRepository.FindBornOn(new DateTime(2017, 11, 03));
+            var anniversaryDate = dateTimeService.GetToday();
+            var employees = employeeRepository.FindBornOn(anniversaryDate);
 
             employees.ToList().ForEach(employee => greetingsSender.Send(employee));
         }
